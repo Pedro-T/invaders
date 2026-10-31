@@ -118,9 +118,11 @@ endif
 GENERATED :=
 OBJECTS :=
 
+GENERATED += $(OBJDIR)/aliens.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/player.o
 GENERATED += $(OBJDIR)/projectiles.o
+OBJECTS += $(OBJDIR)/aliens.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/player.o
 OBJECTS += $(OBJDIR)/projectiles.o
@@ -187,6 +189,9 @@ endif
 # File Rules
 # #############################################
 
+$(OBJDIR)/aliens.o: src/aliens.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/main.o: src/main.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
