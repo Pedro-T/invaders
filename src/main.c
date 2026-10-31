@@ -2,10 +2,9 @@
 #include "raymath.h"
 #include "player.h"
 #include "projectiles.h"
+#include "aliens.h"
 
 #include "resource_dir.h"
-
-#include <stdio.h>
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
@@ -13,30 +12,7 @@
 
 const float playerSpeed = 200.0f;
 
-
-
-void drawPlayer(Player *p, float delta)
-{
-	if (p == NULL)
-	{
-		return;
-	}
-	
-	int direction = 0;
-	if (IsKeyDown(KEY_LEFT))
-	{
-		direction = -1;
-	}
-	else if (IsKeyDown(KEY_RIGHT))
-	{
-		direction = 1;
-	}
-	float newX = p->position.x + (direction * playerSpeed * delta);
-	newX = Clamp(newX, 0.0f, WINDOW_WIDTH - p->width);
-
-	p->position.x = newX;
-	DrawRectangle(p->position.x, p->position.y, p->width, 25, GREEN);
-}
+Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 
 
 int main ()
