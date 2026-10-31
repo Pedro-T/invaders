@@ -1,5 +1,7 @@
 #include "raylib.h"
 #include "raymath.h"
+#include "player.h"
+#include "projectiles.h"
 
 #include "resource_dir.h"
 
@@ -12,39 +14,14 @@
 const float playerSpeed = 200.0f;
 
 
-struct player {
-	Vector2 position;
-	int score;
-	int lives;
-	int width;
-};
-
-typedef struct player Player;
-
-void updatePlayerProjectile(Vector2 *position, float delta)
-{
-	if (position->y < 0)
-	{
-		position->x = -1.0f;
-		position->y = -1.0f;
-		return;
-	}
-	float newY = position->y - (PLAYER_SHOT_SPEED * delta);
-	position->y = newY;
-}
-
-void drawPlayerProjectile(Vector2 position)
-{
-	if (position.x < 0)
-	{
-		return;
-	}
-	DrawLineV(position, Vector2Add(position, (Vector2){0.0f, 10.0f}), WHITE);
-}
-
 
 void drawPlayer(Player *p, float delta)
 {
+	if (p == NULL)
+	{
+		return;
+	}
+	
 	int direction = 0;
 	if (IsKeyDown(KEY_LEFT))
 	{
@@ -79,25 +56,30 @@ int main ()
 	player.lives = 3;
 	player.width = 100;
 
-	Vector2 playerShot = (Vector2){-1.0f, -1.0f};
+	PlayerProjectile playerShot = (PlayerProjectile){(Vector2){-1, -1}, false};
 
 	
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
 	{
 		float delta = GetFrameTime();
 
-		ClearBackground(BLACK);
-
-		if (IsKeyDown(KEY_SPACE) && playerShot.y < 0)
+		if (IsKeyDown(KEY_SPACE) && !playerShot.active)
 		{
-			playerShot = Vector2Add(player.position, (Vector2){player.width / 2.0f, 0.0f});
+			playerShot.position = Vector2Add(player.position, (Vector2){player.width / 2.0f, 0.0f});
+			playerShot.active = true;
 		}
+		updatePlayerProjectile(&playerShot, delta);
+
+		BeginDrawing();
+
+		ClearBackground(BLACK);
 
 		DrawText(TextFormat("Score: %d", player.score), 350, 10, 20, WHITE);
 
 		DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN);
 
-		updatePlayerProjectile(&playerShot, delta);
+
+		
 		drawPlayerProjectile(playerShot);
 		drawPlayer(&player, delta);
 
@@ -108,4 +90,4 @@ int main ()
 	// destroy the window and cleanup the OpenGL context
 	CloseWindow();
 	return 0;
-}   
+}
