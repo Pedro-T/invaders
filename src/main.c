@@ -9,6 +9,7 @@
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
 #define PLAYER_SHOT_SPEED 150.0f
+#define ALIEN_MOVE_INTERVAL 0.50f
 
 const float playerSpeed = 200.0f;
 
@@ -34,10 +35,15 @@ int main ()
 
 	PlayerProjectile playerShot = (PlayerProjectile){(Vector2){-1, -1}, false};
 
+	int alienDirection = 1;
+	float alienMoveTimer = 0.0f;
+	initAliens(aliens);
+
 	
 	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
 	{
 		float delta = GetFrameTime();
+		alienMoveTimer += delta;
 
 		if (IsKeyDown(KEY_SPACE) && !playerShot.active)
 		{
@@ -45,6 +51,19 @@ int main ()
 			playerShot.active = true;
 		}
 		updatePlayerProjectile(&playerShot, delta);
+
+		if (alienMoveTimer > ALIEN_MOVE_INTERVAL)
+		{
+			alienMoveTimer = 0.0f;
+			
+			if (aliensHitBound(aliens))
+			{
+				shiftAliensDown(aliens);
+				alienDirection = -alienDirection;
+			}
+			moveAliens(aliens, alienDirection);
+		}
+		
 
 		BeginDrawing();
 
@@ -58,6 +77,7 @@ int main ()
 		
 		drawPlayerProjectile(playerShot);
 		drawPlayer(&player, delta);
+		drawAliens(aliens);
 
 		EndDrawing();
 	}
