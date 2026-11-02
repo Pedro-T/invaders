@@ -10,12 +10,14 @@
 #define ALIEN_MOVE_AMOUNT 20.0f
 #define BOUND_OFFSET 40.0f
 #define SHIFT_DOWN_AMOUNT 32.0f
+#define ALIEN_GOAL_Y 520.0f
 
 typedef struct Alien {
     Vector2 position;
     int width;
     int height;
     bool alive;
+    int value;
 } Alien;
 
 void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
@@ -26,4 +28,4 @@ void drawAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 
 bool aliensHitBound(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 
-void shiftAliensDown(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
+bool shiftAliensDown(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);

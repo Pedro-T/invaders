@@ -4,6 +4,8 @@
 #include "raylib.h"
 #include "raymath.h"
 
+const int scoreValues[] = {40, 40, 20, 20, 10, 10}; // each row from top downward aliens have same value
+
 
 void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
 /**
@@ -22,7 +24,13 @@ void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
         for (int j = 0; j < ALIEN_COLS; j++)
         {
             float xPos = ALIEN_BLOCK_OFFSET_X + j * ALIEN_CELL_SIZE;
-            aliens[i][j] = (Alien){(Vector2){xPos, offsetY}, 32, 32, true};
+            aliens[i][j] = (Alien){
+                .position = (Vector2){xPos, offsetY}, 
+                .width = 32, 
+                .height = 32,
+                .alive = true,
+                .value = scoreValues[i]
+            };
         }
     }
 
@@ -46,7 +54,7 @@ void moveAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS], int direction)
 }
 
 
-void shiftAliensDown(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
+bool shiftAliensDown(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
 {
     for (int i = 0; i < ALIEN_ROWS; i++)
     {
@@ -57,9 +65,15 @@ void shiftAliensDown(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
             {
                 continue;
             }
-            a->position.y += SHIFT_DOWN_AMOUNT;
+            int newPos = a->position.y + SHIFT_DOWN_AMOUNT;
+            if ((newPos + a->height) >= ALIEN_GOAL_Y)
+            {
+                return true;
+            }
+            a->position.y = newPos;
         }
     }
+    return false;
 }
 
 

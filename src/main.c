@@ -4,6 +4,8 @@
 #include "projectiles.h"
 #include "aliens.h"
 
+#include <stdio.h>
+
 #include "resource_dir.h"
 
 #define WINDOW_WIDTH 800
@@ -12,6 +14,8 @@
 #define ALIEN_MOVE_INTERVAL 0.50f
 
 const float playerSpeed = 200.0f;
+
+int score = 0;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 
@@ -33,10 +37,16 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 				{
 					a->alive = false;
 					p->active = false;
+					score += a->value;
 				}
 			}
 		}
 	}
+}
+
+void gameOver()
+{
+	printf("Game Over!\n");
 }
 
 
@@ -51,11 +61,11 @@ int main ()
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
 
-	Player player;
-	player.position = (Vector2){350, 520};
-	player.score = 0;
-	player.lives = 3;
-	player.width = 100;
+	Player player = (Player) {
+		.position = (Vector2){350, 520},
+		.lives = 3,
+		.width = 100
+	};
 
 	PlayerProjectile playerShot = (PlayerProjectile){(Vector2){-1, -1}, false};
 
@@ -84,7 +94,11 @@ int main ()
 			
 			if (aliensHitBound(aliens))
 			{
-				shiftAliensDown(aliens);
+				bool bottomReached = shiftAliensDown(aliens);
+				if (bottomReached)
+				{
+					gameOver();
+				}
 				alienDirection = -alienDirection;
 			}
 			moveAliens(aliens, alienDirection);
@@ -95,7 +109,7 @@ int main ()
 
 		ClearBackground(BLACK);
 
-		DrawText(TextFormat("Score: %d", player.score), 350, 10, 20, WHITE);
+		DrawText(TextFormat("Score: %d", score), 350, 10, 20, WHITE);
 
 		DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN);
 
