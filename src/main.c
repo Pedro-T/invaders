@@ -13,8 +13,6 @@
 #define PLAYER_SHOT_SPEED 150.0f
 #define ALIEN_MOVE_INTERVAL 0.50f
 
-const float playerSpeed = 200.0f;
-
 int score = 0;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
