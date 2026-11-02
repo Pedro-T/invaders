@@ -18,6 +18,17 @@ void updatePlayerProjectile(PlayerProjectile *p, float delta)
 	p->position.y = newY;
 }
 
+bool checkHitPlayerProjectile(PlayerProjectile p, Alien alien)
+{
+
+	// todo: projectile will not always be a single point
+	return !(p.position.x > alien.position.x + alien.width ||
+		p.position.x < alien.position.x || 
+		p.position.y > alien.position.y + alien.height ||
+		p.position.y < alien.position.y
+	);
+}
+
 void drawPlayerProjectile(PlayerProjectile p)
 {
 	if (!p.active)

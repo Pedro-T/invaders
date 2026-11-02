@@ -15,6 +15,30 @@ const float playerSpeed = 200.0f;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 
+void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN_COLS], float delta)
+{
+	updatePlayerProjectile(p, delta);
+	if (p->active)
+	{
+		for (int i = 0; i < ALIEN_ROWS; i++)
+		{
+			for (int j = 0; j < ALIEN_COLS; j++)
+			{
+				Alien *a = &aliens[i][j];
+				if (!a->alive)
+				{
+					continue;
+				}
+				if (checkHitPlayerProjectile(*p, *a))
+				{
+					a->alive = false;
+					p->active = false;
+				}
+			}
+		}
+	}
+}
+
 
 int main ()
 {
@@ -50,7 +74,9 @@ int main ()
 			playerShot.position = Vector2Add(player.position, (Vector2){player.width / 2.0f, 0.0f});
 			playerShot.active = true;
 		}
-		updatePlayerProjectile(&playerShot, delta);
+
+		processPlayerShotUpdate(&playerShot, aliens, delta);
+		
 
 		if (alienMoveTimer > ALIEN_MOVE_INTERVAL)
 		{

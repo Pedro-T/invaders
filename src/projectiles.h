@@ -3,6 +3,7 @@
 #include "raylib.h"
 
 #include "player.h"
+#include "aliens.h"
 
 typedef struct PlayerProjectile {
     Vector2 position;
@@ -14,5 +15,7 @@ typedef struct EnemyProjectile {
 } EnemyProjectile;
 
 void updatePlayerProjectile(PlayerProjectile *p, float delta);
+
+bool checkHitPlayerProjectile(PlayerProjectile p, Alien alien);
 
 void drawPlayerProjectile(PlayerProjectile p);
