@@ -12,10 +12,20 @@
 #define WINDOW_HEIGHT 600
 #define PLAYER_SHOT_SPEED 150.0f
 #define ALIEN_MOVE_INTERVAL 0.50f
+#define ALIEN_SHOTS_POOL_SIZE 10
 
 int score = 0;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
+AlienProjectile alienShots[ALIEN_SHOTS_POOL_SIZE];
+
+void initAlienShots()
+{
+	for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
+	{
+		alienShots[i].active = false;
+	}
+}
 
 void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN_COLS], float delta)
 {
@@ -31,7 +41,7 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 				{
 					continue;
 				}
-				if (checkHitPlayerProjectile(*p, *a))
+				if (checkHitPlayerProjectile(*p, (Rectangle){a->position.x, a->position.y, a->width, a->height}))
 				{
 					a->alive = false;
 					p->active = false;
@@ -40,6 +50,11 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 			}
 		}
 	}
+}
+
+void aliensAttack()
+{
+
 }
 
 void gameOver()
@@ -69,6 +84,7 @@ int main ()
 
 	int alienDirection = 1;
 	float alienMoveTimer = 0.0f;
+	initAlienShots();
 	initAliens(aliens);
 
 	
@@ -105,16 +121,16 @@ int main ()
 
 		BeginDrawing();
 
+		// core UI
 		ClearBackground(BLACK);
-
 		DrawText(TextFormat("Score: %d", score), 350, 10, 20, WHITE);
+		DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN); // line under player above lives
 
-		DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN);
-
-
-		
+		// player
 		drawPlayerProjectile(playerShot);
 		drawPlayer(&player, delta);
+
+		// aliens
 		drawAliens(aliens);
 
 		EndDrawing();
