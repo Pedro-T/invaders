@@ -1,6 +1,7 @@
 #pragma once
 
 #include "raylib.h"
+#include "projectiles.h"
 
 #define ALIEN_ROWS 6
 #define ALIEN_COLS 8
@@ -14,8 +15,8 @@
 
 typedef struct Alien {
     Vector2 position;
-    int width;
-    int height;
+    float width;
+    float height;
     bool alive;
     int value;
 } Alien;
@@ -29,3 +30,5 @@ void drawAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 bool aliensHitBound(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 
 bool shiftAliensDown(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
+
+bool aliensFireShot(Alien aliens[ALIEN_ROWS][ALIEN_COLS], AlienProjectile *shot);

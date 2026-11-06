@@ -3,6 +3,7 @@
 
 #include "raylib.h"
 #include "raymath.h"
+#include <stdlib.h>
 
 const int scoreValues[] = {40, 40, 20, 20, 10, 10}; // each row from top downward aliens have same value
 
@@ -120,5 +121,35 @@ void drawAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
     }
 }
 
+bool aliensFireShot(Alien aliens[ALIEN_ROWS][ALIEN_COLS], AlienProjectile *shot)
+// find all aliens eligible to fire a shot (first alien from bottom in each column)
+// choose one at random to fire
+{
+    Alien *eligible[ALIEN_COLS] = {0};
+    int foundCount = 0;
+    for (int j = 0; j < ALIEN_COLS; j++)
+    {
+        for (int i = ALIEN_ROWS - 1; i >= 0; i--)
+        {
+            if (aliens[i][j].alive)
+            {
+                eligible[foundCount] = &aliens[i][j];
+                foundCount++;
+                break;
+            }
+        }
+        
+    }
 
+    if (foundCount == 0)
+    {
+        return false;
+    }
+
+    int index = rand() % foundCount;
+    shot->position.x = eligible[index]->position.x + eligible[index]->width / 2.0;
+    shot->position.y = eligible[index]->position.y + eligible[index]->height;
+    shot->active = true;
+    return true;
+}
 
