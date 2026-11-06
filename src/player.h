@@ -1,8 +1,10 @@
 #pragma once
 
+#include "raylib.h";
+
 #define PLAYER_SPEED 200
 
-typedef struct player {
+typedef struct Player {
 	Vector2 position;
 	int lives;
 	int width;
