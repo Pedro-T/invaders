@@ -19,9 +19,9 @@ void drawPlayer(Player *p, float delta)
 	{
 		direction = 1;
 	}
-	float newX = p->position.x + (direction * PLAYER_SPEED * delta);
-	newX = Clamp(newX, 0.0f, GetScreenWidth() - p->width);
+	float newX = p->rect.x + (direction * PLAYER_SPEED * delta);
+	newX = Clamp(newX, 0.0f, GetScreenWidth() - p->rect.width);
 
-	p->position.x = newX;
-	DrawRectangle(p->position.x, p->position.y, p->width, 25, GREEN);
+	p->rect.x = newX;
+	DrawRectangle(p->rect.x, p->rect.y, p->rect.width, 25, GREEN);
 }

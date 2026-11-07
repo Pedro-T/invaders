@@ -59,7 +59,7 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 				{
 					continue;
 				}
-				if (checkHitPlayerProjectile(*p, (Rectangle){a->position.x, a->position.y, a->width, a->height}))
+				if (checkHitPlayerProjectile(*p, (Rectangle){a->rect.x, a->rect.y, a->rect.width, a->rect.height}))
 				{
 					a->alive = false;
 					p->active = false;
@@ -111,12 +111,24 @@ int main ()
 	SearchAndSetResourceDir("resources");
 
 	Player player = (Player) {
-		.position = (Vector2){350, 520},
-		.lives = 3,
-		.width = 100
+		.rect = (Rectangle) {
+			.x = 350.0f,
+			.y = 520.0f,
+			.width = 100.0f,
+			.height = 30.0f
+		},
+		.lives = 3
 	};
 
-	PlayerProjectile playerShot = (PlayerProjectile){(Vector2){-1, -1}, false};
+	PlayerProjectile playerShot = (PlayerProjectile){
+		.rect = (Rectangle) {
+			.x = -1,
+			.y = -1,
+			.width = 3.0f,
+			.height = 6.0f
+		},
+		.active = false
+	};
 
 	int alienDirection = 1;
 	float alienMoveTimer = 0.0f;
@@ -132,7 +144,12 @@ int main ()
 		// player updates
 		if (IsKeyDown(KEY_SPACE) && !playerShot.active)
 		{
-			playerShot.position = Vector2Add(player.position, (Vector2){player.width / 2.0f, 0.0f});
+			playerShot.rect = (Rectangle){
+				.x = player.rect.x + (player.rect.width / 2.0f), 
+				.y = player.rect.y, 
+				.width = 3.0f, 
+				.height = 6.0f
+			};
 			playerShot.active = true;
 		}
 		processPlayerShotUpdate(&playerShot, aliens, delta);

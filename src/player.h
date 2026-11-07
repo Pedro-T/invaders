@@ -5,9 +5,8 @@
 #define PLAYER_SPEED 200
 
 typedef struct Player {
-	Vector2 position;
+	Rectangle rect;
 	int lives;
-	int width;
 } Player;
 
 void drawPlayer(Player *p, float delta);

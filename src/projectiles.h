@@ -7,12 +7,12 @@
 #define ALIEN_SHOT_CUTOFF 550.0f
 
 typedef struct PlayerProjectile {
-    Vector2 position;
+    Rectangle rect;
     bool active;
 } PlayerProjectile;
 
 typedef struct AlienProjectile {
-    Vector2 position;
+    Rectangle rect;
     bool active;
 } AlienProjectile;
 

@@ -14,9 +14,7 @@
 #define ALIEN_GOAL_Y 520.0f
 
 typedef struct Alien {
-    Vector2 position;
-    float width;
-    float height;
+    Rectangle rect;
     bool alive;
     int value;
 } Alien;

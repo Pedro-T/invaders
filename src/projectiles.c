@@ -5,25 +5,25 @@
 
 void updatePlayerProjectile(PlayerProjectile *p, float delta)
 {
-	if (p->position.y < 0)
+	if (p->rect.y < 0)
 	{
-		p->position.x = -1.0f;
-		p->position.y = -1.0f;
+		p->rect.x = -1.0f;
+		p->rect.y = -1.0f;
         p->active = false;
 		return;
 	}
-	float newY = p->position.y - (PLAYER_SHOT_SPEED * delta);
-	p->position.y = newY;
+	float newY = p->rect.y - (PLAYER_SHOT_SPEED * delta);
+	p->rect.y = newY;
 }
 
 bool checkHitPlayerProjectile(PlayerProjectile p, Rectangle r)
 {
 
 	// todo: projectile will not always be a single point
-	return !(p.position.x > r.x + r.width ||
-		p.position.x < r.x || 
-		p.position.y > r.y + r.height ||
-		p.position.y < r.y
+	return !(p.rect.x > r.x + r.width ||
+		p.rect.x < r.x || 
+		p.rect.y > r.y + r.height ||
+		p.rect.y < r.y
 	);
 }
 
@@ -33,17 +33,17 @@ void drawPlayerProjectile(PlayerProjectile p)
 	{
 		return;
 	}
-	DrawLineV(p.position, Vector2Add(p.position, (Vector2){0.0f, 10.0f}), WHITE);
+	DrawLine(p.rect.x, p.rect.y, p.rect.x, p.rect.y + 10.0f, WHITE);
 }
 
 bool updateAlienProjectile(AlienProjectile *p, float delta)
 {
-	float newPos = p->position.y + ALIEN_SHOT_SPEED * delta;
+	float newPos = p->rect.y + ALIEN_SHOT_SPEED * delta;
 	if (newPos >= ALIEN_SHOT_CUTOFF)
 	{
 		return true;
 	}
-	p->position.y = newPos;
+	p->rect.y = newPos;
 	return false;
 }
 
@@ -56,6 +56,6 @@ void drawAliensProjectiles(AlienProjectile projectiles[], int len)
 		{
 			continue;
 		}
-		DrawLine(p.position.x, p.position.y, p.position.x, p.position.y + 8, RED);
+		DrawLine(p.rect.x, p.rect.y, p.rect.x, p.rect.y + 8, RED);
 	}
 }
