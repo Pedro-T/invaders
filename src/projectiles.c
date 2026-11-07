@@ -46,3 +46,16 @@ bool updateAlienProjectile(AlienProjectile *p, float delta)
 	p->position.y = newPos;
 	return false;
 }
+
+void drawAliensProjectiles(AlienProjectile projectiles[], int len)
+{
+	for (int i = 0; i < len; i++)
+	{
+		AlienProjectile p = projectiles[i];
+		if (!p.active)
+		{
+			continue;
+		}
+		DrawLine(p.position.x, p.position.y, p.position.x, p.position.y + 8, RED);
+	}
+}

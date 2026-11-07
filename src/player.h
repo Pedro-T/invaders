@@ -1,6 +1,6 @@
 #pragma once
 
-#include "raylib.h";
+#include "raylib.h"
 
 #define PLAYER_SPEED 200
 

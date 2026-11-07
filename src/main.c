@@ -13,8 +13,10 @@
 #define PLAYER_SHOT_SPEED 150.0f
 #define ALIEN_MOVE_INTERVAL 0.50f
 #define ALIEN_SHOTS_POOL_SIZE 10
+#define ALIEN_ATTACK_INTERVAL 0.80f
 
 int score = 0;
+float alienAttackTimer = 0.0f;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 AlienProjectile alienShots[ALIEN_SHOTS_POOL_SIZE];
@@ -24,6 +26,22 @@ void initAlienShots()
 	for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
 	{
 		alienShots[i].active = false;
+	}
+}
+
+void processAlienProjectiles(float delta)
+{
+	for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
+	{
+		if (!alienShots[i].active)
+		{
+			continue;
+		}
+		bool destroyed = updateAlienProjectile(&alienShots[i], delta);
+		if (destroyed)
+		{
+			alienShots[i].active = false;
+		}
 	}
 }
 
@@ -52,9 +70,27 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 	}
 }
 
-void aliensAttack()
+void aliensAttack(float delta)
 {
-
+	alienAttackTimer += delta;
+	if (alienAttackTimer >= ALIEN_ATTACK_INTERVAL)
+	{
+		AlienProjectile *p = NULL;
+		for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
+		{
+			if (!alienShots[i].active)
+			{
+				p = &alienShots[i];
+				break;
+			}
+		}
+		if (p == NULL)
+		{
+			return;
+		}
+		aliensFireShot(aliens, p);
+		alienAttackTimer = 0.0f;
+	}
 }
 
 void gameOver()
@@ -93,15 +129,16 @@ int main ()
 		float delta = GetFrameTime();
 		alienMoveTimer += delta;
 
+		// player updates
 		if (IsKeyDown(KEY_SPACE) && !playerShot.active)
 		{
 			playerShot.position = Vector2Add(player.position, (Vector2){player.width / 2.0f, 0.0f});
 			playerShot.active = true;
 		}
-
 		processPlayerShotUpdate(&playerShot, aliens, delta);
 		
 
+		// alien updates
 		if (alienMoveTimer > ALIEN_MOVE_INTERVAL)
 		{
 			alienMoveTimer = 0.0f;
@@ -117,6 +154,8 @@ int main ()
 			}
 			moveAliens(aliens, alienDirection);
 		}
+		aliensAttack(delta);
+		processAlienProjectiles(delta);
 		
 
 		BeginDrawing();
@@ -132,6 +171,7 @@ int main ()
 
 		// aliens
 		drawAliens(aliens);
+		drawAliensProjectiles(alienShots, ALIEN_SHOTS_POOL_SIZE);
 
 		EndDrawing();
 	}

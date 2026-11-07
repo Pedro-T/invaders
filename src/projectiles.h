@@ -3,7 +3,7 @@
 #include "raylib.h"
 
 #define PLAYER_SHOT_SPEED 150.0f
-#define ALIEN_SHOT_SPEED 150.0f
+#define ALIEN_SHOT_SPEED 80.0f
 #define ALIEN_SHOT_CUTOFF 550.0f
 
 typedef struct PlayerProjectile {
@@ -23,3 +23,5 @@ bool checkHitPlayerProjectile(PlayerProjectile p, Rectangle r);
 void drawPlayerProjectile(PlayerProjectile p);
 
 bool updateAlienProjectile(AlienProjectile *p, float delta);
+
+void drawAliensProjectiles(AlienProjectile projectiles[], int len);
