@@ -16,6 +16,8 @@ typedef struct Player {
 	PlayerState state;
 } Player;
 
+void initPlayerRendering();
+
 void drawExtraLives(int lives);
 
 void drawPlayer(Player *p, float delta);

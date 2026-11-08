@@ -9,6 +9,14 @@ const float playerStartPosY = 520.0f;
 const float livesOffsetY = 560.0f;
 const float livesOffsetX = 50.0f;
 
+Texture2D playerTexture;
+const char playerTexturePath[] = "player.png";
+
+void initPlayerRendering()
+{
+	playerTexture = LoadTexture(playerTexturePath);
+}
+
 void drawExtraLives(int lives)
 {
 	int currOffset = livesOffsetX;
@@ -24,8 +32,8 @@ void resetPlayerPosition(Player *p)
 	p->rect = (Rectangle) {
 		.x = playerStartPosX,
 		.y = playerStartPosY,
-		.width = 100.0f,
-		.height = 30.0f
+		.width = 72.0f,
+		.height = 16.0f
 	};
 }
 
@@ -49,5 +57,6 @@ void drawPlayer(Player *p, float delta)
 	newX = Clamp(newX, 0.0f, GetScreenWidth() - p->rect.width);
 
 	p->rect.x = newX;
-	DrawRectangle(p->rect.x, p->rect.y, p->rect.width, 25, GREEN);
+	DrawTexture(playerTexture, p->rect.x, p->rect.y, WHITE);
+	//DrawRectangle(p->rect.x, p->rect.y, p->rect.width, p->rect.height, GREEN);
 }
