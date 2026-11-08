@@ -20,12 +20,24 @@ float alienAttackTimer = 0.0f;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 AlienProjectile alienShots[ALIEN_SHOTS_POOL_SIZE];
+Player player;
 
 void initAlienShots()
 {
 	for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
 	{
 		alienShots[i].active = false;
+	}
+}
+
+void playerDeath()
+{
+	player.lives--;
+	resetPlayerPosition(&player);
+
+	if (player.lives <= 0)
+	{
+		// todo show game over screen
 	}
 }
 
@@ -38,6 +50,15 @@ void processAlienProjectiles(float delta)
 			continue;
 		}
 		bool destroyed = updateAlienProjectile(&alienShots[i], delta);
+		if (!destroyed)
+		{
+			bool playerHit = CheckCollisionRecs(alienShots[i].rect, player.rect);
+			if (playerHit)
+			{
+				destroyed = true;
+				playerDeath();
+			}
+		}
 		if (destroyed)
 		{
 			alienShots[i].active = false;
@@ -110,15 +131,12 @@ int main ()
 	// Utility function from resource_dir.h to find the resources folder and set it as the current working directory so we can load from it
 	SearchAndSetResourceDir("resources");
 
-	Player player = (Player) {
-		.rect = (Rectangle) {
-			.x = 350.0f,
-			.y = 520.0f,
-			.width = 100.0f,
-			.height = 30.0f
-		},
-		.lives = 3
+	player = (Player) {
+		.lives = 3,
+		.state = ALIVE
 	};
+	resetPlayerPosition(&player);
+	
 
 	PlayerProjectile playerShot = (PlayerProjectile){
 		.rect = (Rectangle) {
@@ -181,6 +199,7 @@ int main ()
 		ClearBackground(BLACK);
 		DrawText(TextFormat("Score: %d", score), 350, 10, 20, WHITE);
 		DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN); // line under player above lives
+		drawExtraLives(player.lives);
 
 		// player
 		drawPlayerProjectile(playerShot);

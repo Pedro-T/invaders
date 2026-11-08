@@ -4,9 +4,20 @@
 
 #define PLAYER_SPEED 200
 
+typedef enum {
+	ALIVE,
+	DYING,
+	DEAD
+} PlayerState;
+
 typedef struct Player {
 	Rectangle rect;
 	int lives;
+	PlayerState state;
 } Player;
 
+void drawExtraLives(int lives);
+
 void drawPlayer(Player *p, float delta);
+
+void resetPlayerPosition(Player *p);
