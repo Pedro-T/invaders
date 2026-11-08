@@ -18,8 +18,6 @@ typedef struct AlienProjectile {
 
 void updatePlayerProjectile(PlayerProjectile *p, float delta);
 
-bool checkHitPlayerProjectile(PlayerProjectile p, Rectangle r);
-
 void drawPlayerProjectile(PlayerProjectile p);
 
 bool updateAlienProjectile(AlienProjectile *p, float delta);

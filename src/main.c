@@ -59,7 +59,7 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 				{
 					continue;
 				}
-				if (checkHitPlayerProjectile(*p, (Rectangle){a->rect.x, a->rect.y, a->rect.width, a->rect.height}))
+				if (CheckCollisionRecs(p->rect, a->rect))
 				{
 					a->alive = false;
 					p->active = false;

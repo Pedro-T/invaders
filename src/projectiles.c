@@ -16,17 +16,6 @@ void updatePlayerProjectile(PlayerProjectile *p, float delta)
 	p->rect.y = newY;
 }
 
-bool checkHitPlayerProjectile(PlayerProjectile p, Rectangle r)
-{
-
-	// todo: projectile will not always be a single point
-	return !(p.rect.x > r.x + r.width ||
-		p.rect.x < r.x || 
-		p.rect.y > r.y + r.height ||
-		p.rect.y < r.y
-	);
-}
-
 void drawPlayerProjectile(PlayerProjectile p)
 {
 	if (!p.active)
