@@ -17,7 +17,11 @@ typedef struct Alien {
     Rectangle rect;
     bool alive;
     int value;
+    Texture2D *texture;
+    int frame;
 } Alien;
+
+void initAlienGraphics();
 
 void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 

@@ -2,25 +2,32 @@
 #include "projectiles.h"
 
 #include "raylib.h"
-#include "raymath.h"
 #include <stdlib.h>
 
+const int aliensMoveResetFrame = 1; // two frames of animation 0, 1
 const int scoreValues[] = {40, 40, 20, 20, 10, 10}; // each row from top downward aliens have same value
+const int frameWidth = 32;
+
+
+// alien textures are 64x32 with two frames horizontally
+Texture2D alienA;
+Texture2D alienB;
+Texture2D alienC;
+
+void initAlienGraphics()
+{
+    alienA = LoadTexture("alienA.png");
+}
 
 
 void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
-/**
- * create 2d grid of aliens. sets initial rects and offsets
- * grid is array of rows, since all aliens in the same row are the same type
- */
 {
+    // aliens are 32x32 and sit in the center of 64x64 cells
     for (int i = 0; i < ALIEN_ROWS; i++)
     {
-        // set alien archetype here later on
-
-
         // offset going down from top of grid for this row
         float offsetY = ALIEN_BLOCK_OFFSET_Y + i * ALIEN_CELL_SIZE;
+        Texture2D *texture = &alienA;
 
         for (int j = 0; j < ALIEN_COLS; j++)
         {
@@ -33,7 +40,9 @@ void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
                     .height = 32
                 },
                 .alive = true,
-                .value = scoreValues[i]
+                .value = scoreValues[i],
+                .texture = texture,
+                .frame = 0
             };
         }
     }
@@ -53,6 +62,11 @@ void moveAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS], int direction)
                 continue;
             }
             a->rect.x += direction * ALIEN_MOVE_AMOUNT;
+            a->frame++;
+            if (a->frame > aliensMoveResetFrame)
+            {
+                a->frame = 0;
+            }
         }
     }
 }
@@ -119,7 +133,19 @@ void drawAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
             {
                 continue;
             }
-            DrawRectangle(alien.rect.x, alien.rect.y, alien.rect.width, alien.rect.height, BLUE);
+            // frames are stored in one png. each frame is 32px wide, so use the frame counter to offset from the left
+            DrawTextureRec(
+                *(alien.texture), 
+                (Rectangle){
+                    .x = 32*alien.frame,
+                    .y = 0.0f, 
+                    .width = 32.0f,.height = 32.0f
+                }, 
+                (Vector2){
+                    .x = alien.rect.x, 
+                    .y = alien.rect.y
+                }, 
+                WHITE);
         }
     }
 }

@@ -127,6 +127,7 @@ int main ()
 	SearchAndSetResourceDir("resources");
 
 	initPlayerRendering();
+	initAlienGraphics();
 
 	player = (Player) {
 		.lives = 3,
