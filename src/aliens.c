@@ -13,11 +13,21 @@ const int frameWidth = 32;
 Texture2D alienA;
 Texture2D alienB;
 Texture2D alienC;
+Texture2D *textures[6];
 
 void initAlienGraphics()
 {
     alienA = LoadTexture("alienA.png");
+    alienB = LoadTexture("alienB.png");
+    textures[0] = &alienA;
+    textures[1] = &alienA;
+    textures[2] = &alienB;
+    textures[3] = &alienB;
+    textures[4] = &alienA;
+    textures[5] = &alienA;
 }
+
+
 
 
 void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
@@ -27,7 +37,6 @@ void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
     {
         // offset going down from top of grid for this row
         float offsetY = ALIEN_BLOCK_OFFSET_Y + i * ALIEN_CELL_SIZE;
-        Texture2D *texture = &alienA;
 
         for (int j = 0; j < ALIEN_COLS; j++)
         {
@@ -41,7 +50,7 @@ void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
                 },
                 .alive = true,
                 .value = scoreValues[i],
-                .texture = texture,
+                .texture = textures[i],
                 .frame = 0
             };
         }
