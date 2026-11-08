@@ -15,7 +15,7 @@ Texture2D alienB;
 Texture2D alienC;
 Texture2D *textures[6];
 
-void initAlienGraphics()
+void loadAlienResources()
 {
     alienA = LoadTexture("alienA.png");
     alienB = LoadTexture("alienB.png");
@@ -27,6 +27,12 @@ void initAlienGraphics()
     textures[5] = &alienA;
 }
 
+void unloadAlienResources()
+{
+    UnloadTexture(alienA);
+    UnloadTexture(alienB);
+    UnloadTexture(alienC);
+}
 
 
 

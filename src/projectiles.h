@@ -16,6 +16,10 @@ typedef struct AlienProjectile {
     bool active;
 } AlienProjectile;
 
+void loadProjectileResources();
+
+void unloadProjectileResources();
+
 void updatePlayerProjectile(PlayerProjectile *p, float delta);
 
 void drawPlayerProjectile(PlayerProjectile p);

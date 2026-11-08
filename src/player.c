@@ -12,9 +12,14 @@ const float livesOffsetX = 50.0f;
 Texture2D playerTexture;
 const char playerTexturePath[] = "player.png";
 
-void initPlayerRendering()
+void loadPlayerResources()
 {
 	playerTexture = LoadTexture(playerTexturePath);
+}
+
+void unloadPlayerResources()
+{
+	UnloadTexture(playerTexture);
 }
 
 void drawExtraLives(int lives)

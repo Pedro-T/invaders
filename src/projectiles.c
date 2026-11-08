@@ -3,6 +3,16 @@
 
 #include "projectiles.h"
 
+void loadProjectileResources()
+{
+	//tbd
+}
+
+void unloadProjectileResources()
+{
+	// tbd
+}
+
 void updatePlayerProjectile(PlayerProjectile *p, float delta)
 {
 	if (p->rect.y < 0)

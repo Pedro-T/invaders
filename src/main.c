@@ -119,6 +119,20 @@ void gameOver()
 	printf("Game Over!\n");
 }
 
+void loadResources()
+{
+	loadPlayerResources();
+	loadAlienResources();
+	loadProjectileResources();
+}
+
+void unloadResources()
+{
+	unloadAlienResources();
+	unloadPlayerResources();
+	unloadProjectileResources();
+}
+
 
 int main ()
 {
@@ -126,8 +140,7 @@ int main ()
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Low Budget Invaders");
 	SearchAndSetResourceDir("resources");
 
-	initPlayerRendering();
-	initAlienGraphics();
+	loadResources();
 
 	player = (Player) {
 		.lives = 3,
@@ -211,7 +224,8 @@ int main ()
 	}
 
 
-	// destroy the window and cleanup the OpenGL context
+	unloadResources();
+
 	CloseWindow();
 	return 0;
 }

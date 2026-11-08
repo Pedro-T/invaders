@@ -21,7 +21,9 @@ typedef struct Alien {
     int frame;
 } Alien;
 
-void initAlienGraphics();
+void loadAlienResources();
+
+void unloadAlienResources();
 
 void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 
