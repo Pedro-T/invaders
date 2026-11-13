@@ -19,13 +19,15 @@ void loadAlienResources()
 {
     alienA = LoadTexture("alienA.png");
     alienB = LoadTexture("alienB.png");
+    alienC = LoadTexture("alienC.png");
     textures[0] = &alienA;
     textures[1] = &alienA;
     textures[2] = &alienB;
     textures[3] = &alienB;
-    textures[4] = &alienA;
-    textures[5] = &alienA;
+    textures[4] = &alienC;
+    textures[5] = &alienC;
 }
+
 
 void unloadAlienResources()
 {
@@ -33,7 +35,6 @@ void unloadAlienResources()
     UnloadTexture(alienB);
     UnloadTexture(alienC);
 }
-
 
 
 void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
