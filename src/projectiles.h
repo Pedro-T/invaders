@@ -2,7 +2,7 @@
 
 #include "raylib.h"
 
-#define PLAYER_SHOT_SPEED 150.0f
+#define PLAYER_SHOT_SPEED 300.0f
 #define ALIEN_SHOT_SPEED 80.0f
 #define ALIEN_SHOT_CUTOFF 550.0f
 
@@ -14,6 +14,7 @@ typedef struct PlayerProjectile {
 typedef struct AlienProjectile {
     Rectangle rect;
     bool active;
+    int frame;
 } AlienProjectile;
 
 void loadProjectileResources();

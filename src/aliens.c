@@ -195,6 +195,7 @@ bool aliensFireShot(Alien aliens[ALIEN_ROWS][ALIEN_COLS], AlienProjectile *shot)
     shot->rect.x = eligible[index]->rect.x + eligible[index]->rect.width / 2.0;
     shot->rect.y = eligible[index]->rect.y + eligible[index]->rect.height;
     shot->active = true;
+    shot->frame = 0;
     return true;
 }
 

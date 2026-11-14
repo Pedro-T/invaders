@@ -3,14 +3,21 @@
 
 #include "projectiles.h"
 
+Texture2D projTexAlien;
+Texture2D projTexPlayer;
+
+const float playerProjectileWidth = 4.0f;
+const float playerProjectileHeight = 8.0f;
+const int frameLimit = 1;
+
 void loadProjectileResources()
 {
-	//tbd
+	projTexAlien = LoadTexture("projectileAlien.png");
 }
 
 void unloadProjectileResources()
 {
-	// tbd
+	UnloadTexture(projTexAlien);
 }
 
 void updatePlayerProjectile(PlayerProjectile *p, float delta)
@@ -32,7 +39,7 @@ void drawPlayerProjectile(PlayerProjectile p)
 	{
 		return;
 	}
-	DrawLine(p.rect.x, p.rect.y, p.rect.x, p.rect.y + 10.0f, WHITE);
+	DrawRectangle(p.rect.x - p.rect.width / 2.0f, p.rect.y, p.rect.width, p.rect.height, WHITE);
 }
 
 bool updateAlienProjectile(AlienProjectile *p, float delta)
@@ -55,6 +62,19 @@ void drawAliensProjectiles(AlienProjectile projectiles[], int len)
 		{
 			continue;
 		}
-		DrawLine(p.rect.x, p.rect.y, p.rect.x, p.rect.y + 8, RED);
+		DrawTextureRec(
+			projTexAlien, 
+			(Rectangle){
+				.x = p.frame * 10.0f,
+				.y = 0.0f,
+				.width = 10.0f,
+				.height = 18.0f
+			},
+			(Vector2){
+				.x = p.rect.x - p.rect.width / 2.0f,
+				.y = p.rect.y - p.rect.height / 2.0f
+			},
+			WHITE
+		);
 	}
 }

@@ -10,8 +10,7 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define PLAYER_SHOT_SPEED 150.0f
-#define ALIEN_MOVE_INTERVAL 0.50f
+#define ALIEN_MOVE_INTERVAL 0.70f
 #define ALIEN_SHOTS_POOL_SIZE 10
 #define ALIEN_ATTACK_INTERVAL 0.80f
 
@@ -38,6 +37,21 @@ void playerDeath()
 	if (player.lives <= 0)
 	{
 		// todo show game over screen
+	}
+}
+
+void flipAlienShotFrames()
+{
+	for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
+	{
+		if (alienShots[i].active)
+		{
+			alienShots[i].frame++;
+			if (alienShots[i].frame > 1)
+			{
+				alienShots[i].frame = 0;
+			}
+		}
 	}
 }
 
@@ -110,6 +124,7 @@ void aliensAttack(float delta)
 			return;
 		}
 		aliensFireShot(aliens, p);
+		flipAlienShotFrames();
 		alienAttackTimer = 0.0f;
 	}
 }
@@ -153,8 +168,8 @@ int main ()
 		.rect = (Rectangle) {
 			.x = -1,
 			.y = -1,
-			.width = 3.0f,
-			.height = 6.0f
+			.width = 5.0f,
+			.height = 16.0f
 		},
 		.active = false
 	};
@@ -176,8 +191,8 @@ int main ()
 			playerShot.rect = (Rectangle){
 				.x = player.rect.x + (player.rect.width / 2.0f), 
 				.y = player.rect.y, 
-				.width = 3.0f, 
-				.height = 6.0f
+				.width = 5.0f, 
+				.height = 16.0f
 			};
 			playerShot.active = true;
 		}
