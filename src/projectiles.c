@@ -10,6 +10,12 @@ const float playerProjectileWidth = 4.0f;
 const float playerProjectileHeight = 8.0f;
 const int frameLimit = 1;
 
+// all alien shots use the same central frame counter for simplicity
+const float alienProjectileFrameTime = 0.10f;
+float alienProjectileFrameCurrentTime = 0.0f;
+int alienProjectileCurrentFrame = 0;
+const int alienProjectileFrameLimit = 1;
+
 void loadProjectileResources()
 {
 	projTexAlien = LoadTexture("projectileAlien.png");
@@ -42,6 +48,20 @@ void drawPlayerProjectile(PlayerProjectile p)
 	DrawRectangle(p.rect.x - p.rect.width / 2.0f, p.rect.y, p.rect.width, p.rect.height, WHITE);
 }
 
+void incrementAlienProjFrameTime(float delta)
+{
+	alienProjectileFrameCurrentTime += delta;
+	if (alienProjectileFrameCurrentTime >= alienProjectileFrameTime)
+	{
+		alienProjectileCurrentFrame++;
+		if (alienProjectileCurrentFrame > alienProjectileFrameLimit)
+		{
+			alienProjectileCurrentFrame = 0;
+		}
+		alienProjectileFrameCurrentTime -= alienProjectileFrameTime;
+	}
+}
+
 bool updateAlienProjectile(AlienProjectile *p, float delta)
 {
 	float newPos = p->rect.y + ALIEN_SHOT_SPEED * delta;
@@ -65,7 +85,7 @@ void drawAliensProjectiles(AlienProjectile projectiles[], int len)
 		DrawTextureRec(
 			projTexAlien, 
 			(Rectangle){
-				.x = p.frame * 10.0f,
+				.x = alienProjectileCurrentFrame * 10.0f,
 				.y = 0.0f,
 				.width = 10.0f,
 				.height = 18.0f

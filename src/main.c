@@ -31,27 +31,16 @@ void initAlienShots()
 
 void playerDeath()
 {
+	initAlienShots();
 	player.lives--;
+
+	// todo player explosion animation
+
 	resetPlayerPosition(&player);
 
 	if (player.lives <= 0)
 	{
 		// todo show game over screen
-	}
-}
-
-void flipAlienShotFrames()
-{
-	for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
-	{
-		if (alienShots[i].active)
-		{
-			alienShots[i].frame++;
-			if (alienShots[i].frame > 1)
-			{
-				alienShots[i].frame = 0;
-			}
-		}
 	}
 }
 
@@ -124,7 +113,6 @@ void aliensAttack(float delta)
 			return;
 		}
 		aliensFireShot(aliens, p);
-		flipAlienShotFrames();
 		alienAttackTimer = 0.0f;
 	}
 }
@@ -217,6 +205,7 @@ int main ()
 		}
 		aliensAttack(delta);
 		processAlienProjectiles(delta);
+		incrementAlienProjFrameTime(delta);
 		
 
 		BeginDrawing();

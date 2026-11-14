@@ -14,7 +14,6 @@ typedef struct PlayerProjectile {
 typedef struct AlienProjectile {
     Rectangle rect;
     bool active;
-    int frame;
 } AlienProjectile;
 
 void loadProjectileResources();
@@ -26,5 +25,7 @@ void updatePlayerProjectile(PlayerProjectile *p, float delta);
 void drawPlayerProjectile(PlayerProjectile p);
 
 bool updateAlienProjectile(AlienProjectile *p, float delta);
+
+void incrementAlienProjFrameTime(float delta);
 
 void drawAliensProjectiles(AlienProjectile projectiles[], int len);
