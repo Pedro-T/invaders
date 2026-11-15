@@ -130,7 +130,7 @@ bool aliensHitBound(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
             }
             if (a.rect.x + ALIEN_CELL_SIZE > xMax)
             {
-                xMax = a.rect.x;
+                xMax = a.rect.x + ALIEN_CELL_SIZE;
             }
         }
     }
