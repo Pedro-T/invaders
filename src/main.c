@@ -3,6 +3,7 @@
 #include "player.h"
 #include "projectiles.h"
 #include "aliens.h"
+#include "title.h"
 
 #include <stdio.h>
 
@@ -16,10 +17,37 @@
 
 int score = 0;
 float alienAttackTimer = 0.0f;
+int alienDirection = 1;
+float alienMoveTimer = 0.0f;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 AlienProjectile alienShots[ALIEN_SHOTS_POOL_SIZE];
+
 Player player;
+PlayerProjectile playerShot;
+
+typedef enum GameState {
+	TITLE,
+	PLAYING,
+	GAME_OVER
+} GameState;
+
+void initPlayer()
+{
+	player = (Player) {
+		.lives = 3,
+		.state = ALIVE
+	};
+	playerShot = (PlayerProjectile){
+		.rect = (Rectangle) {
+			.x = -1,
+			.y = -1,
+			.width = 5.0f,
+			.height = 16.0f
+		},
+		.active = false
+	};
+}
 
 void initAlienShots()
 {
@@ -136,6 +164,63 @@ void unloadResources()
 	unloadProjectileResources();
 }
 
+void processGameTick(float delta)
+{
+	alienMoveTimer += delta;
+
+	// player updates
+	if (IsKeyDown(KEY_SPACE) && !playerShot.active)
+	{
+		playerShot.rect = (Rectangle){
+			.x = player.rect.x + (player.rect.width / 2.0f), 
+			.y = player.rect.y, 
+			.width = 5.0f, 
+			.height = 16.0f
+		};
+		playerShot.active = true;
+	}
+	processPlayerShotUpdate(&playerShot, aliens, delta);
+	
+
+	// alien updates
+	if (alienMoveTimer > ALIEN_MOVE_INTERVAL)
+	{
+		alienMoveTimer = 0.0f;
+		
+		if (aliensHitBound(aliens))
+		{
+			bool bottomReached = shiftAliensDown(aliens);
+			if (bottomReached)
+			{
+				gameOver();
+			}
+			alienDirection = -alienDirection;
+		}
+		moveAliens(aliens, alienDirection);
+	}
+	aliensAttack(delta);
+	processAlienProjectiles(delta);
+	incrementAlienProjFrameTime(delta);
+	
+
+	BeginDrawing();
+
+	// core UI
+	ClearBackground(BLACK);
+	DrawText(TextFormat("Score: %d", score), 350, 10, 20, WHITE);
+	DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN); // line under player above lives
+	drawExtraLives(player.lives);
+
+	// player
+	drawPlayerProjectile(playerShot);
+	drawPlayer(&player, delta);
+
+	// aliens
+	drawAliens(aliens);
+	drawAliensProjectiles(alienShots, ALIEN_SHOTS_POOL_SIZE);
+
+	EndDrawing();
+}
 
 int main ()
 {
@@ -145,88 +230,29 @@ int main ()
 
 	loadResources();
 
-	player = (Player) {
-		.lives = 3,
-		.state = ALIVE
-	};
-	resetPlayerPosition(&player);
+	GameState state = TITLE;
+
 	
-
-	PlayerProjectile playerShot = (PlayerProjectile){
-		.rect = (Rectangle) {
-			.x = -1,
-			.y = -1,
-			.width = 5.0f,
-			.height = 16.0f
-		},
-		.active = false
-	};
-
-	int alienDirection = 1;
-	float alienMoveTimer = 0.0f;
 	initAlienShots();
 	initAliens(aliens);
-
+	resetPlayerPosition(&player);
 	
-	while (!WindowShouldClose())		// run the loop until the user presses ESCAPE or presses the Close button on the window
+	while (!WindowShouldClose())
 	{
 		float delta = GetFrameTime();
-		alienMoveTimer += delta;
-
-		// player updates
-		if (IsKeyDown(KEY_SPACE) && !playerShot.active)
+		switch (state)
 		{
-			playerShot.rect = (Rectangle){
-				.x = player.rect.x + (player.rect.width / 2.0f), 
-				.y = player.rect.y, 
-				.width = 5.0f, 
-				.height = 16.0f
-			};
-			playerShot.active = true;
+			case TITLE:
+				drawTitle(delta);
+				break;
+			case PLAYING:
+				processGameTick(delta);
+				break;
+			case GAME_OVER:
+				break;
 		}
-		processPlayerShotUpdate(&playerShot, aliens, delta);
 		
-
-		// alien updates
-		if (alienMoveTimer > ALIEN_MOVE_INTERVAL)
-		{
-			alienMoveTimer = 0.0f;
-			
-			if (aliensHitBound(aliens))
-			{
-				bool bottomReached = shiftAliensDown(aliens);
-				if (bottomReached)
-				{
-					gameOver();
-				}
-				alienDirection = -alienDirection;
-			}
-			moveAliens(aliens, alienDirection);
-		}
-		aliensAttack(delta);
-		processAlienProjectiles(delta);
-		incrementAlienProjFrameTime(delta);
-		
-
-		BeginDrawing();
-
-		// core UI
-		ClearBackground(BLACK);
-		DrawText(TextFormat("Score: %d", score), 350, 10, 20, WHITE);
-		DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN); // line under player above lives
-		drawExtraLives(player.lives);
-
-		// player
-		drawPlayerProjectile(playerShot);
-		drawPlayer(&player, delta);
-
-		// aliens
-		drawAliens(aliens);
-		drawAliensProjectiles(alienShots, ALIEN_SHOTS_POOL_SIZE);
-
-		EndDrawing();
 	}
-
 
 	unloadResources();
 

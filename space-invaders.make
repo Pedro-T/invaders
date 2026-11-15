@@ -122,10 +122,12 @@ GENERATED += $(OBJDIR)/aliens.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/player.o
 GENERATED += $(OBJDIR)/projectiles.o
+GENERATED += $(OBJDIR)/title.o
 OBJECTS += $(OBJDIR)/aliens.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/player.o
 OBJECTS += $(OBJDIR)/projectiles.o
+OBJECTS += $(OBJDIR)/title.o
 
 # Rules
 # #############################################
@@ -199,6 +201,9 @@ $(OBJDIR)/player.o: src/player.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/projectiles.o: src/projectiles.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/title.o: src/title.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 
