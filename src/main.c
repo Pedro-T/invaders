@@ -235,6 +235,7 @@ int main ()
 	
 	initAlienShots();
 	initAliens(aliens);
+	initPlayer();
 	resetPlayerPosition(&player);
 	
 	while (!WindowShouldClose())
@@ -244,6 +245,10 @@ int main ()
 		{
 			case TITLE:
 				drawTitle(delta);
+				if (IsKeyDown(KEY_SPACE))
+				{
+					state = PLAYING;
+				}
 				break;
 			case PLAYING:
 				processGameTick(delta);
