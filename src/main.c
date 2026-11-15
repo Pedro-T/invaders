@@ -245,15 +245,20 @@ int main ()
 		{
 			case TITLE:
 				drawTitle(delta);
-				if (IsKeyDown(KEY_SPACE))
+				if (IsKeyPressed(KEY_SPACE))
 				{
 					state = PLAYING;
+					// need to re-fire inits here, or do it at game over
 				}
 				break;
 			case PLAYING:
 				processGameTick(delta);
 				break;
 			case GAME_OVER:
+				if (IsKeyPressed(KEY_SPACE))
+				{
+					state = TITLE;
+				}
 				break;
 		}
 		
