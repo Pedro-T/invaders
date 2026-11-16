@@ -237,6 +237,7 @@ int main ()
 	initAliens(aliens);
 	initPlayer();
 	resetPlayerPosition(&player);
+	initTitle();
 	
 	while (!WindowShouldClose())
 	{

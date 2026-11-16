@@ -1,5 +1,7 @@
 #pragma once
 
-#include "raylib.h"
+void initTitle();
 
 void drawTitle(float delta);
+
+void drawGameOverScreen(float delta, int score);

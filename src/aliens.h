@@ -21,6 +21,8 @@ typedef struct Alien {
     int frame;
 } Alien;
 
+Texture2D *getAlienTex(int idx);
+
 void loadAlienResources();
 
 void unloadAlienResources();

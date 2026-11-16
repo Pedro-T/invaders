@@ -15,6 +15,11 @@ Texture2D alienB;
 Texture2D alienC;
 Texture2D *textures[6];
 
+Texture2D *getAlienTex(int idx)
+{
+    return textures[idx];
+}
+
 void loadAlienResources()
 {
     alienA = LoadTexture("alienA.png");
