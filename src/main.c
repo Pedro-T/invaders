@@ -36,7 +36,8 @@ void initPlayer()
 {
 	player = (Player) {
 		.lives = 3,
-		.state = ALIVE
+		.state = ALIVE,
+		.frame = 0
 	};
 	playerShot = (PlayerProjectile){
 		.rect = (Rectangle) {
@@ -57,19 +58,10 @@ void initAlienShots()
 	}
 }
 
-void playerDeath()
+void playerTakeHit()
 {
 	initAlienShots();
-	player.lives--;
-
-	// todo player explosion animation
-
-	resetPlayerPosition(&player);
-
-	if (player.lives <= 0)
-	{
-		// todo show game over screen
-	}
+	player.state = DYING;
 }
 
 void processAlienProjectiles(float delta)
@@ -87,7 +79,7 @@ void processAlienProjectiles(float delta)
 			if (playerHit)
 			{
 				destroyed = true;
-				playerDeath();
+				playerTakeHit();
 			}
 		}
 		if (destroyed)
@@ -167,6 +159,21 @@ void unloadResources()
 void processGameTick(float delta)
 {
 	alienMoveTimer += delta;
+
+	// if player has finished "dying" i.e. animation done and still has lives, check lives left and respawn or move to game over
+	if (player.state == DEAD)
+	{
+		if (player.lives > 0)
+		{
+			player.lives--;
+			resetPlayerPosition(&player);
+			player.state = ALIVE;
+		}
+		else
+		{
+			gameOver();
+		}
+	}
 
 	// player updates
 	if (IsKeyDown(KEY_SPACE) && !playerShot.active)

@@ -14,6 +14,7 @@ typedef struct Player {
 	Rectangle rect;
 	int lives;
 	PlayerState state;
+	int frame;
 } Player;
 
 void loadPlayerResources();
