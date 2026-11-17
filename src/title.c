@@ -5,10 +5,10 @@ const float frameTime = 0.40f; // for flashing of start game prompt, also used b
 float frameTimeElapsed = 0.0f;
 int frame = 0;
 
-const char startPromptText[] = "Start Game";
-const char startButtonText[] = "<Press Space>";
-const char gameNameText[] = "Low Budget Invaders";
-const char instructions[] = "Destroy aliens while avoiding their shots.\nLose if aliens reach the bottom or you\nrun out of lives.\nSpacebar to fire, left and right arrow\nto move.";
+const char *startPromptText = "Start Game";
+const char *startButtonText = "<Press Space>";
+const char *gameNameText = "Low Budget Invaders";
+const char *instructions = "Destroy aliens while avoiding their shots.\nLose if aliens reach the bottom or you\nrun out of lives.\nSpacebar to fire, left and right arrow\nto move.";
 
 const int lowerAreaOffsetY = 450.0f;
 

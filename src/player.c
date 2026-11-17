@@ -11,8 +11,8 @@ const float livesOffsetX = 50.0f;
 
 Texture2D playerTexture;
 Texture2D dyingAnimation;
-const char playerTexturePath[] = "player.png";
-const char dyingTexturePath[] = "player_death.png";
+const char *playerTexturePath = "player.png";
+const char *dyingTexturePath = "player_death.png";
 
 const float playerFrameTime = 0.3f;
 float playerFrameTimeCurrent = 0.0f;
