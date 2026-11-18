@@ -194,7 +194,7 @@ void processGameTick(float delta, GameState *state)
 	}
 
 	// player updates
-	if (IsKeyDown(KEY_SPACE) && !playerShot.active)
+	if (IsKeyDown(KEY_SPACE) && !playerShot.active && player.state == ALIVE)
 	{
 		playerShot.rect = (Rectangle){
 			.x = player.rect.x + (player.rect.width / 2.0f), 
