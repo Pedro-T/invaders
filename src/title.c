@@ -90,5 +90,8 @@ void drawTitle(float delta)
 
 void drawGameOverScreen(float delta, int score)
 {
+    BeginDrawing();
 
+    ClearBackground(GREEN);
+    EndDrawing();
 }
