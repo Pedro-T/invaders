@@ -92,6 +92,6 @@ void drawGameOverScreen(float delta, int score)
 {
     BeginDrawing();
 
-    ClearBackground(GREEN);
+    ClearBackground(BLACK);
     EndDrawing();
 }

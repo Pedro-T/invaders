@@ -257,11 +257,6 @@ int main ()
 
 	GameState state = TITLE;
 
-	
-	initAlienShots();
-	initAliens(aliens);
-	initPlayer();
-	resetPlayerPosition(&player);
 	initTitle();
 	
 	while (!WindowShouldClose())
@@ -274,7 +269,12 @@ int main ()
 				if (IsKeyPressed(KEY_SPACE))
 				{
 					state = PLAYING;
-					// need to re-fire inits here, or do it at game over
+					initAliens(aliens);
+					initPlayer();
+					initAlienShots();
+					resetPlayerPosition(&player);
+					score = 0;
+					alienDirection = 1;
 				}
 				break;
 			case PLAYING:
