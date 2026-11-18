@@ -139,7 +139,24 @@ void aliensAttack(float delta)
 
 void gameOver()
 {
-	printf("Game Over!\n");
+	// set all aliens to inactive
+	for (int i = 0; i < ALIEN_ROWS; i++)
+	{
+		for (int j = 0; j < ALIEN_COLS; j++)
+		{
+			aliens[i][j].alive = false;
+		}
+	}
+
+	// same for projectiles
+	for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
+	{
+		alienShots[i].active = false;
+	}
+
+	// player
+	player.state = DEAD;
+	playerShot.active = false;
 }
 
 void loadResources()
@@ -156,14 +173,14 @@ void unloadResources()
 	unloadProjectileResources();
 }
 
-void processGameTick(float delta)
+void processGameTick(float delta, GameState *state)
 {
 	alienMoveTimer += delta;
 
 	// if player has finished "dying" i.e. animation done and still has lives, check lives left and respawn or move to game over
 	if (player.state == DEAD)
 	{
-		if (player.lives > 0)
+		if (player.lives > 1)
 		{
 			player.lives--;
 			resetPlayerPosition(&player);
@@ -172,6 +189,7 @@ void processGameTick(float delta)
 		else
 		{
 			gameOver();
+			*state = GAME_OVER;
 		}
 	}
 
@@ -260,9 +278,10 @@ int main ()
 				}
 				break;
 			case PLAYING:
-				processGameTick(delta);
+				processGameTick(delta, &state);
 				break;
 			case GAME_OVER:
+				drawGameOverScreen(delta, score);
 				if (IsKeyPressed(KEY_SPACE))
 				{
 					state = TITLE;
