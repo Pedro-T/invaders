@@ -2,7 +2,9 @@
 #include "projectiles.h"
 
 #include "raylib.h"
+
 #include <stdlib.h>
+#include <time.h>
 
 const int aliensMoveResetFrame = 1; // two frames of animation 0, 1
 const int scoreValues[] = {40, 40, 20, 20, 10, 10}; // each row from top downward aliens have same value
@@ -31,6 +33,9 @@ void loadAlienResources()
     textures[3] = &alienB;
     textures[4] = &alienC;
     textures[5] = &alienC;
+
+    // seed for attacks
+    srand((unsigned int)time(NULL));
 }
 
 
