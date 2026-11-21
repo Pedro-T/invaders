@@ -4,6 +4,7 @@
 #include "projectiles.h"
 #include "aliens.h"
 #include "title.h"
+#include "bunker.h"
 
 #include <stdio.h>
 
@@ -82,6 +83,10 @@ void processAlienProjectiles(float delta)
 			{
 				destroyed = true;
 				playerTakeHit();
+			}
+			else
+			{
+				destroyed = checkBunkerHits(&alienShots[i]);
 			}
 		}
 		if (destroyed)
@@ -166,6 +171,7 @@ void loadResources()
 	loadPlayerResources();
 	loadAlienResources();
 	loadProjectileResources();
+	loadBunkerResources();
 }
 
 void unloadResources()
@@ -173,6 +179,7 @@ void unloadResources()
 	unloadAlienResources();
 	unloadPlayerResources();
 	unloadProjectileResources();
+	unloadBunkerResources();
 }
 
 void processGameTick(float delta, GameState *state)
@@ -238,6 +245,8 @@ void processGameTick(float delta, GameState *state)
 	DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN); // line under player above lives
 	drawExtraLives(player.lives);
 
+	drawBunkers();
+
 	// player
 	drawPlayerProjectile(playerShot);
 	drawPlayer(&player, delta);
@@ -274,6 +283,7 @@ int main ()
 					initAliens(aliens);
 					initPlayer();
 					initAlienShots();
+					initBunkers();
 					resetPlayerPosition(&player);
 					score = 0;
 					alienDirection = 1;

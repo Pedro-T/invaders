@@ -119,12 +119,14 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/aliens.o
+GENERATED += $(OBJDIR)/bunker.o
 GENERATED += $(OBJDIR)/common.o
 GENERATED += $(OBJDIR)/main.o
 GENERATED += $(OBJDIR)/player.o
 GENERATED += $(OBJDIR)/projectiles.o
 GENERATED += $(OBJDIR)/title.o
 OBJECTS += $(OBJDIR)/aliens.o
+OBJECTS += $(OBJDIR)/bunker.o
 OBJECTS += $(OBJDIR)/common.o
 OBJECTS += $(OBJDIR)/main.o
 OBJECTS += $(OBJDIR)/player.o
@@ -194,6 +196,9 @@ endif
 # #############################################
 
 $(OBJDIR)/aliens.o: src/aliens.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/bunker.o: src/bunker.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/common.o: src/common.c
