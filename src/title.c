@@ -15,6 +15,17 @@ const int lowerAreaOffsetY = 450.0f;
 Texture2D *titleAliens[3];
 int scores[] = {10, 20, 40};
 
+void drawTextCentered(const char *text, float yPos, int fontSize, Color color)
+{
+    DrawText(
+        text,
+        GetScreenWidth() / 2.0f - (MeasureText(text, fontSize) / 2.0f),
+        yPos,
+        fontSize,
+        color
+    );
+}
+
 void initTitle()
 {
     titleAliens[0] = getAlienTex(0);
@@ -68,22 +79,18 @@ void drawTitle(float delta)
     ClearBackground(BLACK);
 
     // title area
-    xoffset = (windowWidth / 2.0f) - (MeasureText(gameNameText, 28) / 2.0f);
-    DrawText(gameNameText, xoffset, 20.0f, 28, WHITE);
+    drawTextCentered(gameNameText, 20.0f, 30, WHITE);
 
-    xoffset = (windowWidth / 2.0f) - (MeasureText(startPromptText, 20) / 2.0f);
-    DrawText(startPromptText, xoffset, 200.0f, 20, WHITE);
+    drawTextCentered(startPromptText, 200.0f, 20, WHITE);
 
     if (frame == 0)
     {
-        xoffset = (windowWidth / 2.0f) - (MeasureText(startButtonText, 20) / 2.0f);
-        DrawText(startButtonText, xoffset, 225.0f, 20, GREEN);
+        drawTextCentered(startButtonText, 225.0f, 20, GREEN);
     }
 
     DrawText(instructions, 10.0f, lowerAreaOffsetY, 20, WHITE);
 
     drawScoreTable();
-
 
     EndDrawing();
 }
@@ -93,5 +100,9 @@ void drawGameOverScreen(float delta, int score)
     BeginDrawing();
 
     ClearBackground(BLACK);
+
+    const char *scoreText = TextFormat("Score: %05d", score);
+    drawTextCentered(scoreText, 200.0f, 30, WHITE);
+
     EndDrawing();
 }
