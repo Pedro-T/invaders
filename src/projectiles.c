@@ -87,8 +87,8 @@ void drawAliensProjectiles(AlienProjectile projectiles[], int len)
 			(Rectangle){
 				.x = alienProjectileCurrentFrame * 10.0f,
 				.y = 0.0f,
-				.width = 10.0f,
-				.height = 18.0f
+				.width = p.rect.width,
+				.height = p.rect.height
 			},
 			(Vector2){
 				.x = p.rect.x - p.rect.width / 2.0f,

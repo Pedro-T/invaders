@@ -55,6 +55,8 @@ void initAlienShots()
 	for (int i = 0; i < ALIEN_SHOTS_POOL_SIZE; i++)
 	{
 		alienShots[i].active = false;
+		alienShots[i].rect.width = 10.0f;
+		alienShots[i].rect.height = 18.0f;
 	}
 }
 
