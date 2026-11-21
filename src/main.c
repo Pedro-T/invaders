@@ -1,5 +1,5 @@
 #include "raylib.h"
-#include "raymath.h"
+#include "common.h"
 #include "player.h"
 #include "projectiles.h"
 #include "aliens.h"
@@ -234,7 +234,7 @@ void processGameTick(float delta, GameState *state)
 
 	// core UI
 	ClearBackground(BLACK);
-	DrawText(TextFormat("Score: %d", score), 350, 10, 20, WHITE);
+	drawTextCentered(TextFormat("Score: %d", score), 10.0f, 20, WHITE);
 	DrawLineV((Vector2){0, 550}, (Vector2){WINDOW_WIDTH, 550}, GREEN); // line under player above lives
 	drawExtraLives(player.lives);
 
