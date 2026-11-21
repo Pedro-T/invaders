@@ -1,5 +1,6 @@
 #include "raylib.h"
 #include "aliens.h"
+#include "common.h"
 
 const float frameTime = 0.40f; // for flashing of start game prompt, also used by static aliens
 float frameTimeElapsed = 0.0f;
@@ -14,17 +15,6 @@ const int lowerAreaOffsetY = 450.0f;
 
 Texture2D *titleAliens[3];
 int scores[] = {10, 20, 40};
-
-void drawTextCentered(const char *text, float yPos, int fontSize, Color color)
-{
-    DrawText(
-        text,
-        GetScreenWidth() / 2.0f - (MeasureText(text, fontSize) / 2.0f),
-        yPos,
-        fontSize,
-        color
-    );
-}
 
 void initTitle()
 {
