@@ -86,7 +86,7 @@ void processAlienProjectiles(float delta)
 			}
 			else
 			{
-				destroyed = checkBunkerHits(&alienShots[i]);
+				destroyed = checkBunkerHits(alienShots[i].rect);
 			}
 		}
 		if (destroyed)

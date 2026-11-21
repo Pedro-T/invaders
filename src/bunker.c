@@ -48,10 +48,10 @@ void initBunkers()
     }
 }
 
-bool checkBunkerHits(AlienProjectile *p)
+bool checkBunkerHits(Rectangle r)
 {
     // don't waste time checking unless projectile is in the bunker area
-    if (p->rect.y + p->rect.height < bunkerPosY)
+    if (r.y + r.height < bunkerPosY)
     {
         return false;
     }
@@ -73,7 +73,7 @@ bool checkBunkerHits(AlienProjectile *p)
                     .height = brickWidth,
                     .width = brickWidth
                 };
-                if (CheckCollisionRecs(brickRect, p->rect))
+                if (CheckCollisionRecs(brickRect, r))
                 {
                     b->grid[j][k] = 0;
                     return true;

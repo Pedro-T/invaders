@@ -14,6 +14,6 @@ typedef struct Bunker {
 
 void initBunkers();
 void drawBunkers();
-bool checkBunkerHits(AlienProjectile *p);
+bool checkBunkerHits(Rectangle r);
 void loadBunkerResources();
 void unloadBunkerResources();
