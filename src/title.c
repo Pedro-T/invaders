@@ -101,8 +101,13 @@ void drawGameOverScreen(float delta, int score)
 
     ClearBackground(BLACK);
 
+    drawTextCentered("Game Over", 100.0f, 40, WHITE);
+
     const char *scoreText = TextFormat("Score: %05d", score);
     drawTextCentered(scoreText, 200.0f, 30, WHITE);
+
+    drawTextCentered("You can do better!", 400.0f, 20, WHITE);
+    drawTextCentered("Press space to return to title screen.", 420.0f, 20, WHITE);
 
     EndDrawing();
 }
