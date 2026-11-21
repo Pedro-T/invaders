@@ -91,8 +91,8 @@ void drawAliensProjectiles(AlienProjectile projectiles[], int len)
 				.height = p.rect.height
 			},
 			(Vector2){
-				.x = p.rect.x - p.rect.width / 2.0f,
-				.y = p.rect.y - p.rect.height / 2.0f
+				.x = p.rect.x,
+				.y = p.rect.y
 			},
 			WHITE
 		);
