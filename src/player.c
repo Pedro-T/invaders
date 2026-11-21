@@ -71,7 +71,7 @@ void drawPlayer(Player *p, float delta)
 			newX = Clamp(newX, 0.0f, GetScreenWidth() - p->rect.width);
 
 			p->rect.x = newX;
-			DrawTexture(playerTexture, p->rect.x, p->rect.y, WHITE);
+			DrawTexture(playerTexture, p->rect.x, p->rect.y, GREEN);
 			break;
 		case DYING:
 			playerFrameTimeCurrent += delta;
