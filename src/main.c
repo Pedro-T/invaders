@@ -15,11 +15,13 @@
 #define ALIEN_MOVE_INTERVAL 0.70f
 #define ALIEN_SHOTS_POOL_SIZE 10
 #define ALIEN_ATTACK_INTERVAL 0.80f
+#define PLAYER_SHOT_MIN_TIME 0.5f
 
 int score = 0;
 float alienAttackTimer = 0.0f;
 int alienDirection = 1;
 float alienMoveTimer = 0.0f;
+float playerShotTimer = PLAYER_SHOT_MIN_TIME;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 AlienProjectile alienShots[ALIEN_SHOTS_POOL_SIZE];
@@ -49,6 +51,7 @@ void initPlayer()
 		},
 		.active = false
 	};
+	playerShotTimer = 0.0f;
 }
 
 void initAlienShots()
@@ -118,6 +121,11 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 				}
 			}
 		}
+		bool hitBunker = checkBunkerHits(p->rect);
+		if (hitBunker)
+		{
+			p->active = false;
+		}
 	}
 }
 
@@ -185,6 +193,7 @@ void unloadResources()
 void processGameTick(float delta, GameState *state)
 {
 	alienMoveTimer += delta;
+	playerShotTimer += delta;
 
 	// if player has finished "dying" i.e. animation done and still has lives, check lives left and respawn or move to game over
 	if (player.state == DEAD)
@@ -203,7 +212,7 @@ void processGameTick(float delta, GameState *state)
 	}
 
 	// player updates
-	if (IsKeyDown(KEY_SPACE) && !playerShot.active && player.state == ALIVE)
+	if (IsKeyDown(KEY_SPACE) && !playerShot.active && player.state == ALIVE && playerShotTimer > PLAYER_SHOT_MIN_TIME)
 	{
 		playerShot.rect = (Rectangle){
 			.x = player.rect.x + (player.rect.width / 2.0f), 
@@ -212,6 +221,7 @@ void processGameTick(float delta, GameState *state)
 			.height = 16.0f
 		};
 		playerShot.active = true;
+		playerShotTimer = 0.0f;
 	}
 	processPlayerShotUpdate(&playerShot, aliens, delta);
 	

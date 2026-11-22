@@ -140,7 +140,7 @@ $(TARGETDIR):
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) mkdir -p $(TARGETDIR)
 else
-	$(SILENT) mkdir $(subst /,\\,$(TARGETDIR)) 2>nul || if exist $(subst /,\\,$(TARGETDIR))\\NUL (exit /b 0) else (exit /b 1)
+	$(SILENT) mkdir $(subst /,\\,$(TARGETDIR))
 endif
 
 $(OBJDIR):
@@ -148,7 +148,7 @@ $(OBJDIR):
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) mkdir -p $(OBJDIR)
 else
-	$(SILENT) mkdir $(subst /,\\,$(OBJDIR)) 2>nul || if exist $(subst /,\\,$(OBJDIR))\\NUL (exit /b 0) else (exit /b 1)
+	$(SILENT) mkdir $(subst /,\\,$(OBJDIR))
 endif
 
 clean:
@@ -159,7 +159,7 @@ ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -rf $(OBJDIR)
 else
 	$(SILENT) if exist $(subst /,\\,$(TARGET)) del $(subst /,\\,$(TARGET))
-	$(SILENT) $(foreach f,$(subst /,\\,$(GENERATED)),if exist $(f) del /s /q $(f) >nul &)
+	$(SILENT) if exist $(subst /,\\,$(GENERATED)) del /s /q $(subst /,\\,$(GENERATED))
 	$(SILENT) if exist $(subst /,\\,$(OBJDIR)) rmdir /s /q $(subst /,\\,$(OBJDIR))
 endif
 
