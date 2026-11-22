@@ -6,8 +6,11 @@
 #include "title.h"
 #include "bunker.h"
 
-#include <stdio.h>
+#if defined(PLATFORM_WEB)
+	#include <emscripten/emscripten.h>
+#endif
 
+#include <stddef.h>
 #include "resource_dir.h"
 
 #define WINDOW_WIDTH 800
@@ -34,6 +37,8 @@ typedef enum GameState {
 	PLAYING,
 	GAME_OVER
 } GameState;
+
+GameState state = TITLE;
 
 void initPlayer()
 {
@@ -190,7 +195,7 @@ void unloadResources()
 	unloadBunkerResources();
 }
 
-void processGameTick(float delta, GameState *state)
+void processGameTick(float delta)
 {
 	alienMoveTimer += delta;
 	playerShotTimer += delta;
@@ -207,7 +212,7 @@ void processGameTick(float delta, GameState *state)
 		else
 		{
 			gameOver();
-			*state = GAME_OVER;
+			state = GAME_OVER;
 		}
 	}
 
@@ -268,49 +273,61 @@ void processGameTick(float delta, GameState *state)
 	EndDrawing();
 }
 
+void UpdateDrawFrame()
+{
+	float delta = GetFrameTime();
+	switch (state)
+	{
+		case TITLE:
+			
+			if (IsKeyPressed(KEY_SPACE))
+			{
+				state = PLAYING;
+				initAliens(aliens);
+				initPlayer();
+				initAlienShots();
+				initBunkers();
+				resetPlayerPosition(&player);
+				score = 0;
+				alienDirection = 1;
+			}
+			drawTitle(delta);
+			break;
+		case PLAYING:
+			processGameTick(delta);
+			break;
+		case GAME_OVER:
+			if (IsKeyPressed(KEY_SPACE))
+			{
+				state = TITLE;
+			}
+			drawGameOverScreen(delta, score);
+			break;
+	}
+}
+
 int main ()
 {
-	SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
+	//SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
+
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Low Budget Invaders");
 	SearchAndSetResourceDir("resources");
 
 	loadResources();
 
-	GameState state = TITLE;
+	state = TITLE;
 
 	initTitle();
+
+	#if defined(PLATFORM_WEB)
+		emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
+	#else
+		SetTargetFPS(60);
+	#endif
 	
 	while (!WindowShouldClose())
 	{
-		float delta = GetFrameTime();
-		switch (state)
-		{
-			case TITLE:
-				drawTitle(delta);
-				if (IsKeyPressed(KEY_SPACE))
-				{
-					state = PLAYING;
-					initAliens(aliens);
-					initPlayer();
-					initAlienShots();
-					initBunkers();
-					resetPlayerPosition(&player);
-					score = 0;
-					alienDirection = 1;
-				}
-				break;
-			case PLAYING:
-				processGameTick(delta, &state);
-				break;
-			case GAME_OVER:
-				drawGameOverScreen(delta, score);
-				if (IsKeyPressed(KEY_SPACE))
-				{
-					state = TITLE;
-				}
-				break;
-		}
-		
+		UpdateDrawFrame();		
 	}
 
 	unloadResources();
