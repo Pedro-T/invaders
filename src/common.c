@@ -9,7 +9,7 @@ void setGlobalTint(Color c)
     globalTint = c;
 }
 
-void getGlobalTint()
+Color getGlobalTint()
 {
     return globalTint;
 }
