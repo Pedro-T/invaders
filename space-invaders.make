@@ -119,6 +119,7 @@ GENERATED :=
 OBJECTS :=
 
 GENERATED += $(OBJDIR)/aliens.o
+GENERATED += $(OBJDIR)/audio.o
 GENERATED += $(OBJDIR)/bunker.o
 GENERATED += $(OBJDIR)/common.o
 GENERATED += $(OBJDIR)/main.o
@@ -126,6 +127,7 @@ GENERATED += $(OBJDIR)/player.o
 GENERATED += $(OBJDIR)/projectiles.o
 GENERATED += $(OBJDIR)/title.o
 OBJECTS += $(OBJDIR)/aliens.o
+OBJECTS += $(OBJDIR)/audio.o
 OBJECTS += $(OBJDIR)/bunker.o
 OBJECTS += $(OBJDIR)/common.o
 OBJECTS += $(OBJDIR)/main.o
@@ -150,7 +152,7 @@ $(TARGETDIR):
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) mkdir -p $(TARGETDIR)
 else
-	$(SILENT) mkdir $(subst /,\\,$(TARGETDIR))
+	$(SILENT) mkdir $(subst /,\\,$(TARGETDIR)) 2>nul || if exist $(subst /,\\,$(TARGETDIR))\\NUL (exit /b 0) else (exit /b 1)
 endif
 
 $(OBJDIR):
@@ -158,7 +160,7 @@ $(OBJDIR):
 ifeq (posix,$(SHELLTYPE))
 	$(SILENT) mkdir -p $(OBJDIR)
 else
-	$(SILENT) mkdir $(subst /,\\,$(OBJDIR))
+	$(SILENT) mkdir $(subst /,\\,$(OBJDIR)) 2>nul || if exist $(subst /,\\,$(OBJDIR))\\NUL (exit /b 0) else (exit /b 1)
 endif
 
 clean:
@@ -169,7 +171,7 @@ ifeq (posix,$(SHELLTYPE))
 	$(SILENT) rm -rf $(OBJDIR)
 else
 	$(SILENT) if exist $(subst /,\\,$(TARGET)) del $(subst /,\\,$(TARGET))
-	$(SILENT) if exist $(subst /,\\,$(GENERATED)) del /s /q $(subst /,\\,$(GENERATED))
+	$(SILENT) $(foreach f,$(subst /,\\,$(GENERATED)),if exist $(f) del /s /q $(f) >nul &)
 	$(SILENT) if exist $(subst /,\\,$(OBJDIR)) rmdir /s /q $(subst /,\\,$(OBJDIR))
 endif
 
@@ -196,6 +198,9 @@ endif
 # #############################################
 
 $(OBJDIR)/aliens.o: src/aliens.c
+	@echo "$(notdir $<)"
+	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
+$(OBJDIR)/audio.o: src/audio.c
 	@echo "$(notdir $<)"
 	$(SILENT) $(CC) $(ALL_CFLAGS) $(FORCE_INCLUDE) -o "$@" -MF "$(@:%.o=%.d)" -c "$<"
 $(OBJDIR)/bunker.o: src/bunker.c

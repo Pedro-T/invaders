@@ -5,6 +5,7 @@
 #include "aliens.h"
 #include "title.h"
 #include "bunker.h"
+#include "audio.h"
 
 #if defined(PLATFORM_WEB)
 	#include <emscripten/emscripten.h>
@@ -72,6 +73,7 @@ void initAlienShots()
 void playerTakeHit()
 {
 	initAlienShots();
+	playPlayerDestruction();
 	player.state = DYING;
 }
 
@@ -123,6 +125,7 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 					a->alive = false;
 					p->active = false;
 					score += a->value;
+					playHit();
 				}
 			}
 		}
@@ -130,6 +133,7 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 		if (hitBunker)
 		{
 			p->active = false;
+			playHit();
 		}
 	}
 }
@@ -177,6 +181,7 @@ void gameOver()
 	// player
 	player.state = DEAD;
 	playerShot.active = false;
+	playGameOver();
 }
 
 void loadResources()
@@ -193,6 +198,7 @@ void unloadResources()
 	unloadPlayerResources();
 	unloadProjectileResources();
 	unloadBunkerResources();
+	unloadAudio();
 }
 
 void processGameTick(float delta)
@@ -225,6 +231,7 @@ void processGameTick(float delta)
 			.width = 5.0f, 
 			.height = 16.0f
 		};
+		playFireSound();
 		playerShot.active = true;
 		playerShotTimer = 0.0f;
 	}
@@ -308,11 +315,12 @@ void UpdateDrawFrame()
 
 int main ()
 {
-	//SetConfigFlags(FLAG_VSYNC_HINT | FLAG_WINDOW_HIGHDPI);
 
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Low Budget Invaders");
 	SearchAndSetResourceDir("resources");
+	initAudio();
 
+	// this is for blocking spacebar scrolling on web while playing the game
 	#if defined(PLATFORM_WEB)
 	EM_ASM({
 		window.addEventListener('keydown', function(e) {
