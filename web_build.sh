@@ -1,3 +1,5 @@
+source ./emsdk/emsdk_env.sh
+
 emcc -o bin/web/index.html src/main.c src/common.c src/player.c src/bunker.c src/aliens.c src/title.c src/projectiles.c \
   -Os -Wall \
   ./build/external/raylib-master/src/libraylib.web.a \
@@ -8,3 +10,5 @@ emcc -o bin/web/index.html src/main.c src/common.c src/player.c src/bunker.c src
   --shell-file ./build/external/raylib-master/src/minshell.html \
   --preload-file resources \
   -DPLATFORM_WEB
+
+python3 -m http.server 8000 --directory bin/web
