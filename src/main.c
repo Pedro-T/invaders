@@ -313,6 +313,16 @@ int main ()
 	InitWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Low Budget Invaders");
 	SearchAndSetResourceDir("resources");
 
+	#if defined(PLATFORM_WEB)
+	EM_ASM({
+		window.addEventListener('keydown', function(e) {
+			if (e.code === "Space") {
+				e.preventDefault()
+			}
+		}, false);
+	});
+	#endif
+
 	loadResources();
 
 	state = TITLE;
