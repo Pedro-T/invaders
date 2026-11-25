@@ -20,15 +20,19 @@
 #define ALIEN_SHOTS_POOL_SIZE 10
 #define ALIEN_ATTACK_INTERVAL 0.80f
 #define PLAYER_SHOT_MIN_TIME 0.5f
+#define BONUS_ALIEN_INTERVAL 20.0f
 
 int score = 0;
 float alienAttackTimer = 0.0f;
 int alienDirection = 1;
 float alienMoveTimer = 0.0f;
+float bonusAlienTimer = 0.0f;
 float playerShotTimer = PLAYER_SHOT_MIN_TIME;
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 AlienProjectile alienShots[ALIEN_SHOTS_POOL_SIZE];
+
+Alien bonusAlien = {0};
 
 Player player;
 PlayerProjectile playerShot;
@@ -129,6 +133,19 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 				}
 			}
 		}
+
+		if (bonusAlien.alive)
+		{
+			bool hitBonus = CheckCollisionRecs(bonusAlien.rect, p->rect);
+			if (hitBonus)
+			{
+				bonusAlien.alive = false;
+				score += bonusAlien.value;
+				p->active = false;
+				playHit();
+			}
+		}
+		
 		bool hitBunker = checkBunkerHits(p->rect);
 		if (hitBunker)
 		{
@@ -204,6 +221,7 @@ void unloadResources()
 void processGameTick(float delta)
 {
 	alienMoveTimer += delta;
+	bonusAlienTimer += delta;
 	playerShotTimer += delta;
 
 	// if player has finished "dying" i.e. animation done and still has lives, check lives left and respawn or move to game over
@@ -239,6 +257,15 @@ void processGameTick(float delta)
 	
 
 	// alien updates
+	if (bonusAlienTimer > BONUS_ALIEN_INTERVAL)
+	{
+		bonusAlienTimer -= BONUS_ALIEN_INTERVAL;
+		resetBonusAlien(&bonusAlien);
+		bonusAlien.alive = true;
+	}
+
+	moveBonusAlien(&bonusAlien, delta);
+	
 	if (alienMoveTimer > ALIEN_MOVE_INTERVAL)
 	{
 		alienMoveTimer = 0.0f;
@@ -276,6 +303,7 @@ void processGameTick(float delta)
 	// aliens
 	drawAliens(aliens);
 	drawAliensProjectiles(alienShots, ALIEN_SHOTS_POOL_SIZE);
+	drawBonusAlien(&bonusAlien);
 
 	EndDrawing();
 }
@@ -291,6 +319,7 @@ void UpdateDrawFrame()
 			{
 				state = PLAYING;
 				initAliens(aliens);
+				resetBonusAlien(&bonusAlien);
 				initPlayer();
 				initAlienShots();
 				initBunkers();

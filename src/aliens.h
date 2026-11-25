@@ -6,7 +6,7 @@
 #define ALIEN_ROWS 6
 #define ALIEN_COLS 8
 #define ALIEN_BLOCK_OFFSET_Y 32.0f
-#define ALIEN_CELL_SIZE 64.0f
+#define ALIEN_CELL_SIZE 48.0f
 #define ALIEN_BLOCK_OFFSET_X (GetScreenWidth() - ALIEN_CELL_SIZE * ALIEN_COLS) / 2
 #define ALIEN_MOVE_AMOUNT 20.0f
 #define BOUND_OFFSET 40.0f
@@ -32,6 +32,12 @@ void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 void moveAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS], int direction);
 
 void drawAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
+
+void resetBonusAlien(Alien *a);
+
+void drawBonusAlien(Alien *a);
+
+void moveBonusAlien(Alien *bonusAlien, float delta);
 
 bool aliensHitBound(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 

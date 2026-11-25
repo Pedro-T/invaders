@@ -8,15 +8,17 @@
 
 const int aliensMoveResetFrame = 1; // two frames of animation 0, 1
 const int scoreValues[] = {40, 40, 20, 20, 10, 10}; // each row from top downward aliens have same value
-const int frameWidth = 32;
+const int frameWidth = 32.0f;
+int bonusAlienDirection = 1;
+const float bonusAlienMoveSpeed = 250.0f;
 
 
 // alien textures are 64x32 with two frames horizontally
 Texture2D alienA;
 Texture2D alienB;
 Texture2D alienC;
+Texture2D bonusAlienTexture;
 Texture2D *textures[6];
-
 Texture2D *getAlienTex(int idx)
 {
     return textures[idx];
@@ -27,6 +29,7 @@ void loadAlienResources()
     alienA = LoadTexture("alienA.png");
     alienB = LoadTexture("alienB.png");
     alienC = LoadTexture("alienC.png");
+    bonusAlienTexture = LoadTexture("bonus.png");
     textures[0] = &alienA;
     textures[1] = &alienA;
     textures[2] = &alienB;
@@ -44,6 +47,7 @@ void unloadAlienResources()
     UnloadTexture(alienA);
     UnloadTexture(alienB);
     UnloadTexture(alienC);
+    UnloadTexture(bonusAlienTexture);
 }
 
 
@@ -72,7 +76,60 @@ void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
             };
         }
     }
+}
 
+
+void resetBonusAlien(Alien *a)
+{
+    a->alive = true;
+    a->frame = 0;
+    a->value = 100;
+
+    int dir = rand() % 2;
+    bonusAlienDirection = dir == 1 ? 1 : -1;
+    a->rect = (Rectangle) {
+        .x = dir == 1 ? -40.0f : GetScreenWidth() + 40.0f,
+        .y = 5.0f,
+        .height = 32.0f,
+        .width = 32.0f
+    };
+    a->texture = &bonusAlienTexture;
+}
+
+void drawBonusAlien(Alien *a)
+{
+    if (!(a->alive)) {
+        return;
+    }
+
+    // draw flipped texture depending on direction
+    DrawTextureRec(
+        *(a->texture),
+        (Rectangle) {
+            .x = 0.0f,
+            .y = 0.0f,
+            .height = 32.0f,
+            .width = bonusAlienDirection == 1 ? 32.0f : -32.0f
+        },
+        (Vector2) {
+            .x = a->rect.x,
+            .y = a->rect.y
+        },
+        RED
+    );
+
+}
+
+void moveBonusAlien(Alien *bonusAlien, float delta)
+{
+    if (bonusAlien->alive)
+    {
+        bonusAlien->rect.x += bonusAlienDirection * bonusAlienMoveSpeed * delta;
+        if (bonusAlien->rect.x < -50.0f || bonusAlien->rect.x >= GetScreenWidth() + 50.0f)
+        {
+            bonusAlien->alive = false;
+        }
+    }
 }
 
 
@@ -83,10 +140,6 @@ void moveAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS], int direction)
         for (int j = 0; j < ALIEN_COLS; j++)
         {
             Alien *a = &aliens[i][j];
-            if (!a->alive)
-            {
-                continue;
-            }
             a->rect.x += direction * ALIEN_MOVE_AMOUNT;
             a->frame++;
             if (a->frame > aliensMoveResetFrame)
@@ -193,7 +246,6 @@ bool aliensFireShot(Alien aliens[ALIEN_ROWS][ALIEN_COLS], AlienProjectile *shot)
                 break;
             }
         }
-        
     }
 
     if (foundCount == 0)
