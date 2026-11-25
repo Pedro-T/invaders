@@ -16,7 +16,6 @@
 
 #define WINDOW_WIDTH 800
 #define WINDOW_HEIGHT 600
-#define ALIEN_MOVE_INTERVAL 0.70f
 #define ALIEN_SHOTS_POOL_SIZE 10
 #define ALIEN_ATTACK_INTERVAL 0.80f
 #define PLAYER_SHOT_MIN_TIME 0.5f
@@ -28,6 +27,12 @@ int alienDirection = 1;
 float alienMoveTimer = 0.0f;
 float bonusAlienTimer = 0.0f;
 float playerShotTimer = PLAYER_SHOT_MIN_TIME;
+
+float alienMoveInterval = 0.70f;
+const float minAlienMoveInterval = 0.10f;
+float speedIncreasePerAlien;
+
+
 
 Alien aliens[ALIEN_ROWS][ALIEN_COLS];
 AlienProjectile alienShots[ALIEN_SHOTS_POOL_SIZE];
@@ -129,6 +134,8 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 					a->alive = false;
 					p->active = false;
 					score += a->value;
+					alienMoveInterval -= speedIncreasePerAlien;
+					
 					playHit();
 				}
 			}
@@ -266,7 +273,7 @@ void processGameTick(float delta)
 
 	moveBonusAlien(&bonusAlien, delta);
 	
-	if (alienMoveTimer > ALIEN_MOVE_INTERVAL)
+	if (alienMoveTimer > alienMoveInterval)
 	{
 		alienMoveTimer = 0.0f;
 		
@@ -365,6 +372,9 @@ int main ()
 	state = TITLE;
 
 	initTitle();
+
+	speedIncreasePerAlien = ((alienMoveInterval - minAlienMoveInterval) / (ALIEN_ROWS * ALIEN_COLS));
+	alienMoveInterval = 0.70f;
 
 	#if defined(PLATFORM_WEB)
 		emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
