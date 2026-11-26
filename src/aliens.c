@@ -79,9 +79,9 @@ void initAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS])
 }
 
 
-void resetBonusAlien(Alien *a)
+void resetBonusAlien(Alien *a, bool status)
 {
-    a->alive = true;
+    a->alive = status;
     a->frame = 0;
     a->value = 100;
 

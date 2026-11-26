@@ -33,7 +33,7 @@ void moveAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS], int direction);
 
 void drawAliens(Alien aliens[ALIEN_ROWS][ALIEN_COLS]);
 
-void resetBonusAlien(Alien *a);
+void resetBonusAlien(Alien *a, bool status);
 
 void drawBonusAlien(Alien *a);
 
