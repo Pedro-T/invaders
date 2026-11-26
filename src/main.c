@@ -53,10 +53,10 @@ typedef enum GameState {
 
 GameState state = TITLE;
 
-void initPlayer()
+void initPlayer(int lives)
 {
 	player = (Player) {
-		.lives = 3,
+		.lives = lives,
 		.state = ALIVE,
 		.frame = 0
 	};
@@ -82,6 +82,30 @@ void initAlienShots()
 	}
 }
 
+void reset()
+{
+	initAliens(aliens);
+	initPlayer(player.lives);
+	resetBonusAlien(&bonusAlien, false);
+	initAlienShots();
+	initBunkers();
+	resetPlayerPosition(&player);
+	alienMoveInterval = 0.70f;
+	alienDirection = 1;
+	destroyedCounter = 0;
+	alienAttackTimer = 0.0f;
+	alienMoveTimer = 0.0f;
+	bonusAlienTimer = 0.0f;
+}
+
+
+void restart()
+{
+	initPlayer(3);
+	score = 0;
+	reset();
+}
+
 void playerTakeHit()
 {
 	initAlienShots();
@@ -100,15 +124,18 @@ void processAlienProjectiles(float delta)
 		bool destroyed = updateAlienProjectile(&alienShots[i], delta);
 		if (!destroyed)
 		{
-			bool playerHit = CheckCollisionRecs(alienShots[i].rect, player.rect);
-			if (playerHit)
+			if (player.state == ALIVE)
 			{
-				destroyed = true;
-				playerTakeHit();
-			}
-			else
-			{
-				destroyed = checkBunkerHits(alienShots[i].rect);
+				bool playerHit = CheckCollisionRecs(alienShots[i].rect, player.rect);
+				if (playerHit)
+				{
+					destroyed = true;
+					playerTakeHit();
+				}
+				else
+				{
+					destroyed = checkBunkerHits(alienShots[i].rect);
+				}
 			}
 		}
 		if (destroyed)
@@ -140,6 +167,7 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 					destroyedCounter++;
 					alienMoveInterval -= speedIncreasePerAlien;
 					playHit();
+					return;
 
 					if (destroyedCounter >= ALIEN_ROWS * ALIEN_COLS)
 					{
@@ -159,6 +187,7 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 				score += bonusAlien.value;
 				p->active = false;
 				playHit();
+				return;
 			}
 		}
 		
@@ -167,6 +196,7 @@ void processPlayerShotUpdate(PlayerProjectile *p, Alien aliens[ALIEN_ROWS][ALIEN
 		{
 			p->active = false;
 			playHit();
+			return;
 		}
 	}
 }
@@ -196,6 +226,7 @@ void aliensAttack(float delta)
 
 void gameOver()
 {
+	state = GAME_OVER;
 	// set all aliens to inactive
 	for (int i = 0; i < ALIEN_ROWS; i++)
 	{
@@ -210,6 +241,8 @@ void gameOver()
 	{
 		alienShots[i].active = false;
 	}
+
+	bonusAlien.alive = false;
 
 	// player
 	player.state = DEAD;
@@ -234,6 +267,7 @@ void unloadResources()
 	unloadAudio();
 }
 
+
 void processGameTick(float delta)
 {
 	alienMoveTimer += delta;
@@ -252,7 +286,6 @@ void processGameTick(float delta)
 		else
 		{
 			gameOver();
-			state = GAME_OVER;
 		}
 	}
 
@@ -276,7 +309,7 @@ void processGameTick(float delta)
 	if (bonusAlienTimer > BONUS_ALIEN_INTERVAL)
 	{
 		bonusAlienTimer -= BONUS_ALIEN_INTERVAL;
-		resetBonusAlien(&bonusAlien);
+		resetBonusAlien(&bonusAlien, true);
 		bonusAlien.alive = true;
 	}
 
@@ -324,20 +357,6 @@ void processGameTick(float delta)
 	EndDrawing();
 }
 
-void reset()
-{
-	initAliens(aliens);
-	resetBonusAlien(&bonusAlien);
-	initPlayer();
-	initAlienShots();
-	initBunkers();
-	resetPlayerPosition(&player);
-	speedIncreasePerAlien = ((alienMoveInterval - minAlienMoveInterval) / (ALIEN_ROWS * ALIEN_COLS));
-	alienMoveInterval = 0.70f;
-	score = 0;
-	alienDirection = 1;
-	destroyedCounter = 0;
-}
 
 void UpdateDrawFrame()
 {
@@ -349,7 +368,7 @@ void UpdateDrawFrame()
 			if (IsKeyPressed(KEY_SPACE))
 			{
 				state = PLAYING;
-				reset();
+				restart();
 			}
 			drawTitle(delta);
 			break;
@@ -387,6 +406,7 @@ int main ()
 	loadResources();
 
 	state = TITLE;
+	speedIncreasePerAlien = ((alienMoveInterval - minAlienMoveInterval) / (ALIEN_ROWS * ALIEN_COLS));
 
 	initTitle();
 
@@ -394,13 +414,11 @@ int main ()
 		emscripten_set_main_loop(UpdateDrawFrame, 0, 1);
 	#else
 		SetTargetFPS(60);
+		while (!WindowShouldClose())
+		{
+			UpdateDrawFrame();		
+		}
 	#endif
-	
-	while (!WindowShouldClose())
-	{
-		UpdateDrawFrame();		
-	}
-
 	unloadResources();
 
 	CloseWindow();
