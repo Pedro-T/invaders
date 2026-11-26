@@ -26,6 +26,7 @@ void loadPlayerResources()
 void unloadPlayerResources()
 {
 	UnloadTexture(playerTexture);
+	UnloadTexture(dyingAnimation);
 }
 
 void drawExtraLives(int lives)
@@ -40,6 +41,7 @@ void drawExtraLives(int lives)
 
 void resetPlayerPosition(Player *p)
 {
+	playerFrameTimeCurrent = 0.0f;
 	p->rect = (Rectangle) {
 		.x = playerStartPosX,
 		.y = playerStartPosY,
