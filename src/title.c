@@ -14,7 +14,7 @@ const char *instructions = "Destroy aliens while avoiding their shots.\nLose if 
 const int lowerAreaOffsetY = 450.0f;
 
 Texture2D *titleAliens[3];
-int scores[] = {10, 20, 40};
+int scores[] = {40, 20, 10};
 
 void initTitle()
 {
